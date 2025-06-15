@@ -25,7 +25,7 @@ exports.handler = async function(event, context) {
   try {
     const { prompt } = JSON.parse(event.body);
 
-    const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1", {
+    const response = await fetch("https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta", {
       method: "POST",
       headers: {
         Authorization: "Bearer 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",
@@ -40,7 +40,7 @@ exports.handler = async function(event, context) {
     const data = await response.json();
 
     const reply = (Array.isArray(data) && data[0]?.generated_text)
-      ? data[0].generated_text.split("Janusz:")[1]?.trim() || data[0].generated_text
+      ? data[0].generated_text
       : data.generated_text || data.error || JSON.stringify(data);
 
     return {
