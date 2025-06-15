@@ -1,8 +1,10 @@
 const fetch = require("node-fetch");
 
-// v2 hotfix - wymuszony deploy
-
+// Wersja v3 – wymuszony deploy z console.log
 exports.handler = async function(event, context) {
+  const now = new Date().toISOString();
+  console.log("Wersja funkcji Janusz v3 – deploy: " + now);
+
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -59,7 +61,4 @@ exports.handler = async function(event, context) {
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({ error: "Błąd serwera: " + err.message }),
-    };
-  }
-};
+      body: JSON.stringify({ error: "Błąd serwera: "
