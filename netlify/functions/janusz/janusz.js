@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 
 exports.handler = async function(event, context) {
   const now = new Date().toISOString();
-  console.log("Wersja funkcji Janusz v3 – deploy: " + now);
+  console.log("Wersja funkcji Janusz v4 – logowanie odpowiedzi: " + now);
 
   if (event.httpMethod === "OPTIONS") {
     return {
@@ -41,15 +41,18 @@ exports.handler = async function(event, context) {
     });
 
     let data = {};
+    const raw = await response.text();
+    console.log("RAW RESPONSE:", raw);
     try {
-      data = await response.json();
+      data = JSON.parse(raw);
     } catch (e) {
-      data = { error: "Brak danych z modelu AI." };
+      console.log("Błąd JSON.parse:", e.message);
+      data = { error: "Nieprawidłowy JSON z Hugging Face" };
     }
 
     const reply = (Array.isArray(data) && data[0]?.generated_text)
       ? data[0].generated_text
-      : data.generated_text || data.error || "Janusz nie wie, co powiedzieć.";
+      : data.generated_text || data.error || "To na pewno robota kotów szpiegów z kosmosu.";
 
     return {
       statusCode: 200,
