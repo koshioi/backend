@@ -1,7 +1,6 @@
 const fetch = require("node-fetch");
 
 exports.handler = async function(event, context) {
-  // Obsługa CORS preflight
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -29,7 +28,7 @@ exports.handler = async function(event, context) {
     const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1", {
       method: "POST",
       headers: {
-        Authorization: `Bearer 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`,
+        Authorization: "Bearer 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",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -42,7 +41,7 @@ exports.handler = async function(event, context) {
 
     const reply = (Array.isArray(data) && data[0]?.generated_text)
       ? data[0].generated_text.split("Janusz:")[1]?.trim() || data[0].generated_text
-      : data.generated_text || data.error || "Nieznana odpowiedź";
+      : data.generated_text || data.error || JSON.stringify(data);
 
     return {
       statusCode: 200,
