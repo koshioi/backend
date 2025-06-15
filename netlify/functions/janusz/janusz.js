@@ -1,9 +1,24 @@
 const fetch = require("node-fetch");
 
 exports.handler = async function(event, context) {
+  // Obsługa CORS preflight
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+      body: "",
+    };
+  }
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: "Method Not Allowed",
     };
   }
@@ -31,11 +46,18 @@ exports.handler = async function(event, context) {
 
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
       body: JSON.stringify({ reply }),
     };
   } catch (err) {
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify({ error: "Błąd serwera: " + err.message }),
     };
   }
