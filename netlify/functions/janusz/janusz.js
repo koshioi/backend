@@ -1,5 +1,7 @@
 const fetch = require("node-fetch");
 
+// v2 hotfix - wymuszony deploy
+
 exports.handler = async function(event, context) {
   if (event.httpMethod === "OPTIONS") {
     return {
