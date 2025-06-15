@@ -1,6 +1,5 @@
 const fetch = require("node-fetch");
 
-// Wersja v3 – wymuszony deploy z console.log
 exports.handler = async function(event, context) {
   const now = new Date().toISOString();
   console.log("Wersja funkcji Janusz v3 – deploy: " + now);
@@ -41,11 +40,16 @@ exports.handler = async function(event, context) {
       }),
     });
 
-    const data = await response.json();
+    let data = {};
+    try {
+      data = await response.json();
+    } catch (e) {
+      data = { error: "Brak danych z modelu AI." };
+    }
 
     const reply = (Array.isArray(data) && data[0]?.generated_text)
       ? data[0].generated_text
-      : data.generated_text || data.error || JSON.stringify(data);
+      : data.generated_text || data.error || "Janusz nie wie, co powiedzieć.";
 
     return {
       statusCode: 200,
@@ -61,4 +65,7 @@ exports.handler = async function(event, context) {
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({ error: "Błąd serwera: "
+      body: JSON.stringify({ error: "Błąd serwera: " + err.message }),
+    };
+  }
+};
